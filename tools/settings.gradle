@@ -1,0 +1,1 @@
+include ':app', ':gsyVideoPlayer-ex_so', ':gsyVideoPlayer', ':gsyvideoplayer-exo2', ':gsyVideoPlayer-java',':gsyvideoplayer-androidvideocache'

@@ -1,0 +1,33 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        //低版本gradle的bug as2.3.3 默认用的低版本的gradle 有些依赖包的仓库地址变更了
+        //在as3.0以上的版本会有一个 google()的仓库地址 等同于这个效果
+        maven { url "https://maven.google.com" }
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        //添加apt插件
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "io.realm:realm-gradle-plugin:3.1.1"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        //低版本gradle的bug as2.3.3 默认用的低版本的gradle 有些依赖包的仓库地址变更了
+        //在as3.0以上的版本会有一个 google()的仓库地址 等同于这个效果
+        maven { url "https://maven.google.com" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
