@@ -9,7 +9,7 @@ import com.dou361.ijkplayer.listener.OnShowThumbnailListener;
 import com.dou361.ijkplayer.widget.PlayStateParams;
 import com.zed.tools.BaseFragment;
 import com.zed.tools.GlideApp;
-import com.zed.tools.LogUtil;
+import com.zed.tools.util.LogUtil;
 import com.zed.tools.R;
 
 

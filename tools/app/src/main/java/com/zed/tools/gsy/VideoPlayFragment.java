@@ -7,9 +7,9 @@
 //import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 //import com.shuyu.gsyvideoplayer.video.base.GSYBaseVideoPlayer;
 //import com.zed.tools.BaseFragment;
-//import com.zed.tools.LogUtil;
+//import com.zed.tools.util.LogUtil;
 //import com.zed.tools.R;
-//import com.zed.tools.ToastUtil;
+//import com.zed.tools.util.ToastUtil;
 //
 //import butterknife.BindView;
 //

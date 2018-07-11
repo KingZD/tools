@@ -53,8 +53,8 @@ public class JjdxmVideoActivity extends BaseActivity implements VideoActivityCon
             b3.putString("title", "http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8");
             b3.putInt("tag", 2);
             Bundle b4 = new Bundle();
-            b4.putString("url", "rtmp://192.168.3.95:1935/live");
-            b4.putString("title", "rtmp://192.168.3.95:1935/live");
+            b4.putString("url", "rtmp://192.168.3.187/mylive/test1");
+            b4.putString("title", "rtmp://192.168.3.187/mylive/test1");
             b4.putInt("tag", 3);
             f1 = new JjdxmFragment();
             f1.setArguments(b1);

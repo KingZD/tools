@@ -19,7 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 
-import com.zed.tools.LogUtil;
+import com.zed.tools.util.LogUtil;
 import com.zed.tools.R;
 
 /**

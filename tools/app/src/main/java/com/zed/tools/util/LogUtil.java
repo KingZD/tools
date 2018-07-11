@@ -1,4 +1,4 @@
-package com.zed.tools;
+package com.zed.tools.util;
 import android.util.Log;
 
 /**

@@ -1,7 +1,9 @@
-package com.zed.tools;
+package com.zed.tools.util;
 
 import android.view.Gravity;
 import android.widget.Toast;
+
+import com.zed.tools.MyApplication;
 
 /**
  * Created by codeest on 2016/8/4.
