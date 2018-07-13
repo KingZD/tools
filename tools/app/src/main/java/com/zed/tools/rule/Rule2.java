@@ -13,14 +13,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
 
+import com.zed.tools.util.DateUtil;
 import com.zed.tools.util.LogUtil;
 import com.zed.tools.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 改编于
@@ -51,13 +56,13 @@ public class Rule2 extends View {
     //标尺开始位置
     private float currLocation = 0;
     //刻度表的最大值，默认为200
-    private int maxValue = 50;
+    private int maxValue = 5 * showItemSize;
     //一个刻度表示的值的大小
     private int oneItemValue = 1;
     //设置刻度线间宽度,大小由 showItemSize确定
     private int scaleDistance;
     //刻度高度，默认值为40
-    private float scaleHeight = 40;
+    private float scaleHeight = 20;
     //刻度的颜色刻度色，默认为灰色
     private int lineColor = Color.GRAY;
     //刻度文字的颜色，默认为灰色
@@ -76,13 +81,12 @@ public class Rule2 extends View {
     private int dateHeight;
     //刻度尺上时间文本的间距
     private int dateSplitHeight = 10;
-    //是否需要指向靠近刻度的一边 例如滑动到1.6松开手会自己滑动到2
-    private boolean isNeedPoint = false;
+    //不同时间段的间距
+    private int dateSplitWidth = 500;
     private int mLastX, mMove;
-    //画刻度-1左边刻度 1 右边刻度
-    private int direct = 1;
-    //是否初始化过了
-    private boolean isInit = false;
+    private int loopCount = 0;
+    //当前指针所在位置
+    private int currCursorIndex = 0;
 
     public Rule2(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -101,7 +105,6 @@ public class Rule2 extends View {
         oneItemValue = ta.getInteger(R.styleable.LoopScaleView_oneItemValue, oneItemValue);
         scaleTextColor = ta.getColor(R.styleable.LoopScaleView_scaleTextColor, scaleTextColor);
         cursorColor = ta.getColor(R.styleable.LoopScaleView_cursorColor, cursorColor);
-        isNeedPoint = ta.getBoolean(R.styleable.LoopScaleView_isNeedPoint, false);
         int cursorMapId = ta.getResourceId(R.styleable.LoopScaleView_cursorMap, -1);
         if (cursorMapId != -1) {
             cursorMap = BitmapFactory.decodeResource(getResources(), cursorMapId);
@@ -111,6 +114,7 @@ public class Rule2 extends View {
         mScroller = new Scroller(context);
         mGestureDetector = new GestureDetector(context, gestureListener);
         dateHeight = getTextRect("0").height();
+        mCursorDate = DateUtil.getCurrentDate();
     }
 
     /**
@@ -134,28 +138,40 @@ public class Rule2 extends View {
         viewHeight = MeasureSpec.getSize(heightMeasureSpec);
         //一个小刻度的宽度（十进制，每5个小刻度为一个大刻度）
         scaleDistance = getMeasuredWidth() / (showItemSize * 5);
-        //尺子长度总的个数*一个的宽度
-        viewWidth = maxValue / oneItemValue * scaleDistance;
-        maxX = getItemsCount() * scaleDistance;
-        minX = -maxX;
     }
 
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
+        //一个小刻度的宽度（十进制，每5个小刻度为一个大刻度）
+        scaleDistance = 54;
+        //尺子长度总的个数*一个的宽度
+        viewWidth = getItemsCount() * loopCount * scaleDistance + (loopCount - 1) * dateSplitWidth;
+        //往右滑动的最大距离限制
+        maxX = 0;
+        //往左滑动的最大距离限制
+        minX = -getItemsCount() * loopCount * scaleDistance - (loopCount - 1) * dateSplitWidth;
+        loopCount = dates == null ? 0 : dates.size();
         canvas.clipRect(getPaddingStart(), getPaddingTop(), getWidth() - getPaddingRight(), viewHeight - getPaddingBottom());
         drawLine(canvas);
         drawCursor(canvas);
         drawCursorTime(canvas);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeWidth(scaleWidth);
-        for (int i = 0; i <= maxValue / oneItemValue; i++) {
-            drawScale(canvas, i, -direct);
+
+        for (int k = 0; k < loopCount; k++) {
+            String mDate = dates.get(k).getDate();
+            long time = dates.get(k).getTime();
+            for (int i = 0; i <= maxValue; i++) {
+                int index = k * maxValue + i;
+                //起始坐标x
+                float location = cursorLocation + currLocation + index * scaleDistance;
+                //时间段之间的间距
+                if (k > 0)
+                    location += k * dateSplitWidth;
+                drawScale(canvas, mDate, time, i, location);
+            }
         }
-        for (int i = 0; i <= maxValue / oneItemValue; i++) {
-            drawScale(canvas, i, direct);
-        }
-        isInit = true;
     }
 
     /**
@@ -167,7 +183,7 @@ public class Rule2 extends View {
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setStrokeWidth(3);
         paint.setColor(lineColor);
-        canvas.drawLine(getPaddingStart(), viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), viewWidth - getPaddingEnd(), viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
+        canvas.drawLine(getPaddingStart(), viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), getMeasuredWidth() - getPaddingEnd(), viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
     }
 
     /**
@@ -193,16 +209,16 @@ public class Rule2 extends View {
      * @param canvas
      */
     private void drawCursorTime(Canvas canvas) {
+        if (TextUtils.isEmpty(mCursorDate)) return;
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_green_dark));
         paint.setTextSize(scaleTextSize);
-        String drawStrY = "2018-07-09 22:36:00";
         Rect boundsY = new Rect();
-        paint.getTextBounds(drawStrY, 0, drawStrY.length(), boundsY);
+        paint.getTextBounds(mCursorDate, 0, mCursorDate.length(), boundsY);
         if (cursorMap == null) { //绘制一条红色的竖线线
-            canvas.drawText(drawStrY, cursorLocation - boundsY.width() / 2, (viewHeight - boundsY.height()) / 2, paint);
+            canvas.drawText(mCursorDate, cursorLocation - boundsY.width() / 2, (viewHeight - boundsY.height()) / 2, paint);
         } else {
-            canvas.drawText(drawStrY, cursorLocation - boundsY.width() / 2, viewHeight - cursorMap.getHeight() - dateHeight * 2 - getPaddingBottom() - 3 * dateSplitHeight, paint);
+            canvas.drawText(mCursorDate, cursorLocation - boundsY.width() / 2, viewHeight - cursorMap.getHeight() - dateHeight * 2 - getPaddingBottom() - 3 * dateSplitHeight, paint);
         }
     }
 
@@ -210,33 +226,28 @@ public class Rule2 extends View {
      * 绘制刻度线
      *
      * @param canvas 画布
-     * @param value  刻度值
-     * @param direct 正向绘制还是逆向绘制
+     * @param index  刻度值
      */
 
-    private void drawScale(Canvas canvas, int value, int direct) {
-        if (!isInit) {
-            //如果不需要循环且方向为右则累加左边刻度值作为叠加基数
-            //并赋予当前位置为左边顶点刻度的距离为初始值
-            if (direct > 0)
-                currLocation = maxValue * scaleDistance;
-            //如果不需要循环则方向保持一致向左
-            direct = Math.abs(direct);
-        }
-        float location = cursorLocation + currLocation + value * scaleDistance * direct;
+    private void drawScale(Canvas canvas, String mDate, long time, int index, float location) {
         LogUtil.i("drawScale", String.valueOf(location));
-        if (value % 5 == 0) {
-            canvas.drawLine(location, viewHeight - scaleHeight * 5 / 2 - getPaddingBottom(), location, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
-            String drawStrY = "2018-07-09";
+        if (index % 5 == 0) {
+            canvas.drawLine(location, viewHeight - scaleHeight * 2 - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), location, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
+            //每个格子代表多少毫秒
+            long second = time / (maxValue);
+            String date = DateUtil.stringAddTime(mDate, index * second, fmt);
+
+            String[] dStr = date.split(" ");
+            String drawStrY = dStr[0];
             Rect boundsY = getTextRect(drawStrY);
 
-            String drawStrD = "22:36:00";
+            String drawStrD = dStr[1];
             Rect boundsD = getTextRect(drawStrD);
 
             canvas.drawText(drawStrY, location - boundsY.width() / 2, viewHeight - boundsY.height() - getPaddingBottom() - dateSplitHeight, paint);
             canvas.drawText(drawStrD, location - boundsD.width() / 2, viewHeight - getPaddingBottom(), paint);
         } else {
-            canvas.drawLine(location, viewHeight - scaleHeight * 2 - getPaddingBottom(), location, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
+            canvas.drawLine(location, viewHeight - dateHeight - (dateSplitHeight + scaleHeight) * 2 - getPaddingBottom(), location, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
         }
     }
 
@@ -262,8 +273,13 @@ public class Rule2 extends View {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                //手指抬起是计算出当前滑到第几个位置
-                getIntegerPosition();
+                //控制滑动超过距离后返回
+                if (currLocation <= -(scaleDistance * maxValue * loopCount + (loopCount - 1) * dateSplitWidth)
+                        || currLocation > 0) {
+                    float speed = mScroller.getCurrVelocity();
+                    mScroller.fling((int) currLocation, 0, (int) speed, 0, minX, maxX, 0, 0);
+                    setNextMessage(0);
+                }
                 break;
             default:
                 break;
@@ -317,26 +333,6 @@ public class Rule2 extends View {
         currLocation += distance;
         //设置新的位置
         setCurrLocation(currLocation);
-    }
-
-    /**
-     * 获取当前位置最近的整数刻度
-     */
-    private void getIntegerPosition() {
-        if (isNeedPoint) {
-            int currentItem = (int) (currLocation / scaleDistance);
-            float fraction = currLocation - currentItem * scaleDistance;
-            if (Math.abs(fraction) > 0.5 * scaleDistance) {
-                if (fraction < 0) {
-                    currLocation = (currentItem - 1) * scaleDistance;
-                } else {
-                    currLocation = (currentItem + 1) * scaleDistance;
-                }
-            } else {
-                currLocation = currentItem * scaleDistance;
-            }
-            setCurrLocation(currLocation);
-        }
     }
 
     /**
@@ -406,12 +402,27 @@ public class Rule2 extends View {
     private void setCurrLocation(float currLocation) {
         this.currLocation = currLocation;
         LogUtil.i("setCurrLocation", String.valueOf(currLocation));
-        int currentItem = (int) (currLocation / scaleDistance) * oneItemValue;
-        if (mOnValueChangeListener != null) {
-            if (currentItem < 0) {
-                currentItem = maxValue + currentItem;
+
+        long second;
+        long px;
+        //尺子总长度
+        long ruleWidth = scaleDistance * maxValue * loopCount + (loopCount - 1) * dateSplitWidth;
+        //开始区分分组时间刻度
+        for (int k = 0; k < loopCount; k++) {
+            float mCl = Math.abs(currLocation);
+            float end = maxValue * (k + 1) * scaleDistance + k * dateSplitWidth;
+            float start = maxValue * k * scaleDistance + k * dateSplitWidth;
+            //判断 currLocation 在哪个时间段
+            if (mCl >= start && mCl <= end) {
+                second = dates.get(k).getTime() / (maxValue * scaleDistance);
+                mDate = dates.get(k).getDate();
+                px = (long) (mCl - start);
+                currCursorIndex = k;
+                mCursorDate = DateUtil.stringAddTime(mDate, px * second, fmt);
+                if (mOnValueChangeListener != null) {
+                    mOnValueChangeListener.OnValueChange(mCursorDate);
+                }
             }
-            mOnValueChangeListener.OnValueChange(currentItem);
         }
         postInvalidate();
     }
@@ -510,9 +521,6 @@ public class Rule2 extends View {
             // 滚动还没有完成
             if (!mScroller.isFinished()) {
                 animationHandler.sendEmptyMessage(msg.what);
-            } else {
-                //到整数刻度
-                getIntegerPosition();
             }
         }
     };
@@ -522,6 +530,25 @@ public class Rule2 extends View {
     }
 
     public interface OnValueChangeListener {
-        void OnValueChange(int newValue);
+        void OnValueChange(String date);
+    }
+
+    String fmt = "yyyy-MM-dd HH:mm:ss";
+    private String mCursorDate;
+    private String mDate;
+    private long time;
+    private List<RuleDate> dates = new ArrayList<RuleDate>() {{
+        add(new RuleDate("2018-05-08 14:13:19", 4 * 60 * 60 * 1000));
+        add(new RuleDate("2018-06-08 19:43:44", 2 * 60 * 60 * 1000));
+        add(new RuleDate("2018-07-04 08:33:59", 6 * 60 * 60 * 1000));
+    }};
+
+    public void setDates(List<RuleDate> dates) {
+        this.dates = dates;
+        if (dates != null && dates.get(0) != null)
+            mDate = dates.get(0).getDate();
+        if (TextUtils.isEmpty(mDate))
+            mDate = DateUtil.getCurrentDate();
+        invalidate();
     }
 }

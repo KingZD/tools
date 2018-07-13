@@ -865,4 +865,10 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     }
 
 
+    @Override
+    public void setVolume(float v1, float v2) {
+        if (getCurrentPlayer() != null) {
+            getCurrentPlayer().setVolume(v1, v2);
+        }
+    }
 }

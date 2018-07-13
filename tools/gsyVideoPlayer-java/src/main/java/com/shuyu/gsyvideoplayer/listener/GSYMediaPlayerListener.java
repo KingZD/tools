@@ -24,4 +24,6 @@ public interface GSYMediaPlayerListener {
     void onVideoResume();
 
     void onVideoResume(boolean seek);
+
+    void setVolume(float v1, float v2);
 }

@@ -22,6 +22,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  */
 
 public class Exo2PlayerManager implements IPlayerManager {
+    private boolean mNeedMute;
 
     private IjkExo2MediaPlayer mediaPlayer;
 
@@ -41,6 +42,8 @@ public class Exo2PlayerManager implements IPlayerManager {
         if (dummySurface == null) {
             dummySurface = DummySurface.newInstanceV17(context, false);
         }
+        if (mNeedMute)
+            mediaPlayer.setVolume(0, 0);
         //使用自己的cache模式
         GSYModel gsyModel = (GSYModel) msg.obj;
         try {
@@ -90,6 +93,7 @@ public class Exo2PlayerManager implements IPlayerManager {
 
     @Override
     public void setNeedMute(boolean needMute) {
+        this.mNeedMute = needMute;
         if (mediaPlayer != null) {
             if (needMute) {
                 mediaPlayer.setVolume(0, 0);

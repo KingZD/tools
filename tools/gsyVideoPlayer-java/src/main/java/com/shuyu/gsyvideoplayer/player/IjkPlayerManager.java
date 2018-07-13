@@ -30,7 +30,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 
 public class IjkPlayerManager implements IPlayerManager {
-
+    private boolean mNeedMute;
     /**
      * log level
      */
@@ -60,7 +60,8 @@ public class IjkPlayerManager implements IPlayerManager {
                 return true;
             }
         });
-
+        if (mNeedMute)
+            mediaPlayer.setVolume(0, 0);
         GSYModel gsyModel = (GSYModel) msg.obj;
         String url = gsyModel.getUrl();
 
@@ -142,6 +143,7 @@ public class IjkPlayerManager implements IPlayerManager {
 
     @Override
     public void setNeedMute(boolean needMute) {
+        this.mNeedMute = needMute;
         if (mediaPlayer != null) {
             if (needMute) {
                 mediaPlayer.setVolume(0, 0);

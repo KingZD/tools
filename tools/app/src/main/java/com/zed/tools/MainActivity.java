@@ -5,9 +5,9 @@ import android.view.View;
 
 //import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.zed.tools.R;
-//import com.zed.tools.gsy.VideoPlayActivity;
 //import com.zed.tools.gsy.VideoPlayFragment;
-import com.zed.tools.llsy.JjdxmVideoActivity;
+import com.zed.tools.gsy.VideoPlayActivity;
+//import com.zed.tools.llsy.JjdxmVideoActivity;
 import com.zed.tools.rule.RuleActivity;
 
 public class MainActivity extends BaseActivity {
@@ -32,11 +32,11 @@ public class MainActivity extends BaseActivity {
     }
 
     public void toGsy(View view) {
-        startActivity(new Intent(this, TestActivity.class));
+        startActivity(new Intent(this, VideoPlayActivity.class));
     }
 
     public void toJjdxm(View view) {
-        startActivity(new Intent(this, JjdxmVideoActivity.class));
+//        startActivity(new Intent(this, JjdxmVideoActivity.class));
     }
 
     public void toRule(View view) {

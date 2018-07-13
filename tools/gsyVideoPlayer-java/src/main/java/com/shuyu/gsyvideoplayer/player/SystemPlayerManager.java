@@ -24,6 +24,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
  */
 
 public class SystemPlayerManager implements IPlayerManager {
+    private boolean mNeedMute;
 
     private AndroidMediaPlayer mediaPlayer;
 
@@ -40,6 +41,8 @@ public class SystemPlayerManager implements IPlayerManager {
     public void initVideoPlayer(Context context, Message msg, List<VideoOptionModel> optionModelList, ICacheManager cacheManager) {
         mediaPlayer = new AndroidMediaPlayer();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        if (mNeedMute)
+            mediaPlayer.setVolume(0, 0);
         release = false;
         GSYModel gsyModel = (GSYModel) msg.obj;
         try {
@@ -77,6 +80,7 @@ public class SystemPlayerManager implements IPlayerManager {
 
     @Override
     public void setNeedMute(boolean needMute) {
+        this.mNeedMute = needMute;
         try {
             if (mediaPlayer != null && !release) {
                 if (needMute) {

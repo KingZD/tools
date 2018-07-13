@@ -58,7 +58,7 @@ public class DateUtil {
             date = format.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
-            date = getNowDate();
+            date = new Date();
         }
         return date;
     }

@@ -1,4 +1,4 @@
-package com.zed.tools.llsy;
+package com.zed.tools;
 
 public interface VideoActivityContraller {
     void showAllContainer();
@@ -8,4 +8,6 @@ public interface VideoActivityContraller {
     int isFullContainer();
 
     void toggleFullScreen(int index);
+
+    boolean isFullContainer(int index);
 }

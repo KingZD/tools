@@ -1,9 +1,9 @@
-package com.zed.tools.llsy;
+package com.zed.tools;
 
 public interface VideoFragmentContraller {
     void onVideoPause();
 
     void onVideoResume();
 
-    void setVolume(float v);
+    void setNeedMute(boolean bool);
 }
