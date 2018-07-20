@@ -16,4 +16,7 @@
     <color name="Grey_900">#212121</color>
     <color name="simple_player_stream_name_playing">#ff0043bd</color>
     <color name="simple_player_stream_name_normal">#ffffffff</color>
+    <color name="color_0d7d44">#0d7d44</color>
+    <color name="com_ycuwq_datepicker_selectedTextColor">#33aaff</color>
+    <color name="com_ycuwq_datepicker_divider">#cccccc</color>
 </resources>

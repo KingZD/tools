@@ -35,6 +35,7 @@
         <activity android:name="com.zed.tools.llsy.JjdxmVideoActivity" />
         <activity android:name="com.zed.tools.TestActivity" />
         <activity android:name="com.zed.tools.rule.RuleActivity" />
+        <activity android:name="com.zed.tools.calendar.CalendarActivity" />
     </application>
 
 </manifest>

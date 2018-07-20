@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">rtmpPlayer</string>
     <string name="small_problem">出现了点小问题,稍后重试</string>
+    <string name="ycuwq_datepicker_cancel">Cancel</string>
+    <string name="ycuwq_datepicker_decide">Decide</string>
+    <string name="ycuwq_datepicker_hour">H</string>
+    <string name="ycuwq_datepicker_minute">m</string>
 </resources>

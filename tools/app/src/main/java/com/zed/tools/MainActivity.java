@@ -6,6 +6,7 @@ import android.view.View;
 //import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.zed.tools.R;
 //import com.zed.tools.gsy.VideoPlayFragment;
+import com.zed.tools.calendar.CalendarActivity;
 import com.zed.tools.gsy.VideoPlayActivity;
 //import com.zed.tools.llsy.JjdxmVideoActivity;
 import com.zed.tools.rule.RuleActivity;
@@ -41,6 +42,10 @@ public class MainActivity extends BaseActivity {
 
     public void toRule(View view) {
         startActivity(new Intent(this, RuleActivity.class));
+    }
+
+    public void toDDCalendar(View view) {
+        startActivity(new Intent(this, CalendarActivity.class));
     }
 
 }

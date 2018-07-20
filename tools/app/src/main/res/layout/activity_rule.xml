@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="@color/Grey_200"
-        app:cursorMap="@drawable/xsj" />
+        app:cursorColor="@color/color_0d7d44" />
 
     <com.zed.tools.rule.Rule2_1
         android:id="@+id/loop"

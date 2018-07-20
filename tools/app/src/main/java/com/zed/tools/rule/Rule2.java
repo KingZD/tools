@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
@@ -87,6 +88,9 @@ public class Rule2 extends View {
     private int loopCount = 0;
     //当前指针所在位置
     private int currCursorIndex = 0;
+    //默认指示器宽高
+    int defWidthCursor = 40;
+    int defHeightCursor = 80;
 
     public Rule2(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -197,7 +201,15 @@ public class Rule2 extends View {
             paint.setFlags(Paint.ANTI_ALIAS_FLAG);
             paint.setStrokeWidth(cursorWidth);
             paint.setColor(cursorColor);
-            canvas.drawLine(cursorLocation, getPaddingTop() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), cursorLocation, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
+            paint.setAntiAlias(true);
+            //三角形指示器
+            Path path = new Path();
+            path.moveTo(cursorLocation + defWidthCursor / 2, viewHeight - getPaddingTop() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom() - defHeightCursor);
+            path.lineTo(cursorLocation - defWidthCursor / 2, viewHeight - getPaddingTop() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom() - defHeightCursor);
+            path.lineTo(cursorLocation, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom());
+            path.close();
+            canvas.drawPath(path, paint);
+//            canvas.drawLine(cursorLocation, getPaddingTop() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), cursorLocation, viewHeight - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
         } else { //绘制标识图片
             canvas.drawBitmap(cursorMap, cursorLocation - cursorMap.getWidth() / 2, viewHeight - cursorMap.getHeight() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom(), paint);
         }
@@ -210,13 +222,13 @@ public class Rule2 extends View {
      */
     private void drawCursorTime(Canvas canvas) {
         if (TextUtils.isEmpty(mCursorDate)) return;
+        Rect boundsY = getTextRect(mCursorDate);
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(ContextCompat.getColor(getContext(), android.R.color.holo_green_dark));
+        paint.setColor(cursorColor);
         paint.setTextSize(scaleTextSize);
-        Rect boundsY = new Rect();
-        paint.getTextBounds(mCursorDate, 0, mCursorDate.length(), boundsY);
         if (cursorMap == null) { //绘制一条红色的竖线线
-            canvas.drawText(mCursorDate, cursorLocation - boundsY.width() / 2, (viewHeight - boundsY.height()) / 2, paint);
+            float startX = viewHeight - getPaddingTop() - (dateHeight + dateSplitHeight) * 2 - getPaddingBottom() - defHeightCursor;
+            canvas.drawText(mCursorDate, cursorLocation - boundsY.width() / 2, startX - boundsY.height() / 2, paint);
         } else {
             canvas.drawText(mCursorDate, cursorLocation - boundsY.width() / 2, viewHeight - cursorMap.getHeight() - dateHeight * 2 - getPaddingBottom() - 3 * dateSplitHeight, paint);
         }

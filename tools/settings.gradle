@@ -1,1 +1,1 @@
-include ':app', ':gsyVideoPlayer-ex_so', ':gsyVideoPlayer', ':gsyvideoplayer-exo2', ':gsyVideoPlayer-java',':gsyvideoplayer-androidvideocache'
+include ':app', ':gsyVideoPlayer-ex_so', ':gsyVideoPlayer', ':gsyvideoplayer-exo2', ':gsyVideoPlayer-java',':gsyvideoplayer-androidvideocache', ':download'

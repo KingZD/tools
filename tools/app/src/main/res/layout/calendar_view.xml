@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <LinearLayout
+        android:id="@+id/llButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/btYear"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/line_et_bg"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="yyyy-MM-dd"
+                android:textColor="#a8a8a8" />
+
+            <RadioButton
+                android:id="@+id/btTime"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/line_et_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="00:00"
+                android:textColor="#7f8284" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btSure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:background="#f5f5f5"
+            android:text="确认"
+            android:textColor="#74b6f8" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/vSplit"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/llButton"
+        android:background="#f6f6f6" />
+
+    <LinearLayout
+        android:id="@+id/llDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSplit"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:background="#fff"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="一" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="二" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="三" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="四" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="五" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="六" />
+
+            <TextView
+                style="@style/weekIndicatorStyle"
+                android:text="日" />
+        </LinearLayout>
+
+        <com.zed.tools.calendar.view.MonthPager
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+    </LinearLayout>
+
+    <com.zed.tools.calendar.datapicker.time.HourAndMinutePicker
+        android:id="@+id/flTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vSplit"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
+</merge>
