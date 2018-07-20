@@ -19,3 +19,17 @@
 
 新增卡尺多时间段展示模式 Rule为多时间段 Rule_1为循环不循环普通模式
 
+
+
+## 新增加日历选择
+**仿钉钉申请加班日历选择**
+
+|主题界面|上下滑动翻页|点击选择日历后展示时间选择|选择时间后点击确认|
+|--|--|--|--|
+|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105759.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105829.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105855.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105924.png?raw=true)|
+
+|[DatePicker](https://github.com/ycuwq/DatePicker)|[SuperCalendar](https://github.com/MagicMashRoom/SuperCalendar)|
+|--|--|
+
+借用前人的轮子，我只作把两个功能整合搬运工加上一些小逻辑,感谢前人种树
+
