@@ -28,8 +28,10 @@
 |--|--|--|--|
 |![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105759.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105829.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105855.png?raw=true)|![](https://github.com/KingZD/Resource/blob/master/tools/device-2018-07-20-105924.png?raw=true)|
 
-|[DatePicker](https://github.com/ycuwq/DatePicker)|[SuperCalendar](https://github.com/MagicMashRoom/SuperCalendar)|
-|--|--|
+|[DatePicker](https://github.com/ycuwq/DatePicker)|[SuperCalendar](https://github.com/MagicMashRoom/SuperCalendar)|[VerticalViewPager](https://github.com/castorflex/VerticalViewPager)
+|--|--|--|
 
+
+VerticalViewPager 有些API过时，请注意修改
 借用前人的轮子，我只作把两个功能整合搬运工加上一些小逻辑,感谢前人种树
 
