@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.zed.tools"
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -15,6 +15,11 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 }
@@ -35,6 +40,13 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation ("com.github.hotchemi:permissionsdispatcher:3.2.0"){
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:3.2.0"
+
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.41'
 
     //gsy和jjdxm的包有些冲突所以我注释了gsy的代码演示了jjdxm 如果要看 gsy请注释jjdxm并将gsy目录下的文件恢复
         compile project(':gsyVideoPlayer')

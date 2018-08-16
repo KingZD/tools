@@ -63,9 +63,9 @@ public class DatePicker extends LinearLayout implements YearPicker.OnYearSelecte
 		LayoutInflater.from(context).inflate(R.layout.layout_date, this);
 		initChild();
 		initAttrs(context, attrs);
-		mYearPicker.setBackgroundDrawable(getBackground());
-		mMonthPicker.setBackgroundDrawable(getBackground());
-        mDayPicker.setBackgroundDrawable(getBackground());
+		mYearPicker.setBackground(getBackground());
+		mMonthPicker.setBackground(getBackground());
+        mDayPicker.setBackground(getBackground());
     }
 
 	private void initAttrs(Context context, @Nullable AttributeSet attrs) {
@@ -140,13 +140,23 @@ public class DatePicker extends LinearLayout implements YearPicker.OnYearSelecte
         }
     }
 
-    @Override
+	@Override
+	public void setBackground(Drawable background) {
+		super.setBackground(background);
+		if (mYearPicker != null && mMonthPicker != null && mDayPicker != null) {
+			mYearPicker.setBackground(background);
+			mMonthPicker.setBackground(background);
+			mDayPicker.setBackground(background);
+		}
+	}
+
+	@Override
     public void setBackgroundDrawable(Drawable background) {
-        super.setBackgroundDrawable(background);
+        setBackground(background);
         if (mYearPicker != null && mMonthPicker != null && mDayPicker != null) {
-            mYearPicker.setBackgroundDrawable(background);
-            mMonthPicker.setBackgroundDrawable(background);
-            mDayPicker.setBackgroundDrawable(background);
+            mYearPicker.setBackground(background);
+            mMonthPicker.setBackground(background);
+            mDayPicker.setBackground(background);
         }
     }
 

@@ -23,6 +23,7 @@ allprojects {
         //低版本gradle的bug as2.3.3 默认用的低版本的gradle 有些依赖包的仓库地址变更了
         //在as3.0以上的版本会有一个 google()的仓库地址 等同于这个效果
         maven { url "https://maven.google.com" }
+        maven { url "https://jitpack.io" }
     }
 }
 
